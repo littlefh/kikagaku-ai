@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-1 mt-3 text-gray-800">AIいらすとや</h1>
+                    <p class="mb-4">文章（プロンプト）からそれを表すいらすとや（https://www.irasutoya.com）風の画像を生成します。</p>
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <div class="col-lg-6">
+
+                            <!-- Input -->
+                            <div class="card mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Input</h6>
+                                </div>
+                                <div class="card-body">
+
+                                    <form class="user" method="POST">
+                                        <div class="form-group">
+                                            <div class="mb-1 small">Prompt</div>
+                                            <textarea class="form-control bg-light border-0 small" placeholder="プロンプトを入力してください"
+                                                aria-describedby="basic-addon2" name="prompt" id="prompt"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mb-1 small">Seed</div>
+                                            <input type="number" class="form-control bg-light border-0 small"
+                                              aria-label="seed" aria-describedby="basic-addon2" name="seed" id="seed" min="-1" value="-1">        
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="button" class="btn btn-primary btn-user btn-block" id="generate" value="生成する" onclick="send_to_python()">
+                                        </div>
+                                        <div class="text-gray-700" id="error"></div>
+                                    </form>
+
+                                </div>
+                            </div>
+                    
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <!-- Output -->
+                            <div class="card">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Output</h6>
+                                </div>
+                                <div class="card-body">
+                                    <img id="result">
+                                </div>
+                            </div>
+
+                        </div>    
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+{% endblock %}
