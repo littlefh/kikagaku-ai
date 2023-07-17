@@ -92,7 +92,8 @@ def generate(words, seed):
 
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
-        image.save(f'output_{gettime()}.png', pnginfo=pnginfo)
+#        #for debug
+#        image.save(f'output_{gettime()}.png', pnginfo=pnginfo)
 
         buf = io.BytesIO()
         image.save(buf, 'png', pnginfo=pnginfo)
