@@ -13,8 +13,9 @@ from dotenv import load_dotenv
 
 # Flaskオブジェクトをインスタンス化
 app = Flask(__name__)
-load_dotenv()  # take environment variables from .env.
-api_url = os.getenv('API_URL', None)
+#load_dotenv()  # take environment variables from .env.
+#api_url = os.getenv('API_URL', None)
+api_url = 'https://0561-34-23-241-69.ngrok-free.app'
 
 # --- View側の設定 ---
 @app.route('/')
