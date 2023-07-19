@@ -1,7 +1,7 @@
 # coding: utf-8
 
 #　必要なモジュールのインポート
-from flask import Flask, request, render_template, redirect,url_for, url_for
+from flask import Flask, request, render_template, redirect, url_for
 import json
 import requests
 import io
@@ -13,15 +13,18 @@ from dotenv import load_dotenv
 
 # Flaskオブジェクトをインスタンス化
 app = Flask(__name__)
-#load_dotenv()  # take environment variables from .env.
-#api_url = os.getenv('API_URL', None)
-api_url = 'https://0561-34-23-241-69.ngrok-free.app'
 
-# --- View側の設定 ---
+# バックエンドURLを環境変数より取得
+load_dotenv()  # take environment variables from .env.
+api_url = os.getenv('API_URL', None)
+
+# トップページ
 @app.route('/')
 def route():
+    # AIいらすとやページにリダイレクト
     return redirect(url_for('irasutoya'))
 
+# AIいらすとや
 @app.route('/irasutoya', methods = ['GET', 'POST'])
 def irasutoya():
     # POST メソッドの条件の定義
@@ -42,6 +45,7 @@ def gettime():
     dt = d.strftime('%Y%m%d_%H%M%S')
     return dt
 
+# 画像生成
 def generate(words, seed):
     if api_url is None:
         print('no api_url')
@@ -78,6 +82,7 @@ def generate(words, seed):
     "width": 512,
     "height": 512
     }
+    # 画像生成
     response = requests.post(url=f'{api_url}/sdapi/v1/txt2img', json=params)
     if response.status_code != requests.codes.ok:
         print(response.status_code)
@@ -89,20 +94,22 @@ def generate(words, seed):
         png_payload = {
             "image": 'data:image/png;base64,{}'.format(img)
         }
+        # 画像情報を取得
         response2 = requests.post(url=f'{api_url}/sdapi/v1/png-info', json=png_payload)
 
+        # 画像情報をPNGのメタデータとして設定
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
-#        #for debug
+#        # デバッグ用の画像保存
 #        image.save(f'output_{gettime()}.png', pnginfo=pnginfo)
 
+        # 画面表示用のbase64に変換
         buf = io.BytesIO()
         image.save(buf, 'png', pnginfo=pnginfo)
         base64_str = base64.b64encode(buf.getvalue()).decode('utf-8')
         base64_data = 'data:image/png;base64,{}'.format(base64_str)
         return base64_data
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) # デバッグ用、コード変更時に自動リロードされる
 #    app.run()

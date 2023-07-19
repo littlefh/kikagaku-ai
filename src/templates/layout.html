@@ -123,19 +123,25 @@
 
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-loading-overlay-2.1.7/dist/loadingoverlay.min.js') }}"></script>
 
+    <!-- AIいらすとや用スクリプト -->
     <script type="text/javascript">
         function send_to_python() {
-            $("#error").text(""); // エラー表示を初期化
+            // エラー表示を初期化
+            $("#error").text(""); 
+            // 入力情報を取得
             var prompt = $("#prompt").val();
             var seed = $("#seed").val();
+            // ボタンを非活性化
             $("#generate").prop("disabled", true);
+            // ボタンをローディング表示
 //            $("#generate").LoadingOverlay("show", {
 //                background  : "rgba(165, 190, 100, 0.5)"
 //            });
             $("#generate").LoadingOverlay("show", {
                 image       : "",
                 fontawesome : "fa fa-spinner fa-spin"
-            });     
+            });
+            // AjaxでPOSTメソッドを呼び出し（画面遷移せず結果画像を表示するため）
             $.ajax("/irasutoya", {// 連想配列をPOSTする
                 type: "post",
                 data: {
@@ -144,23 +150,25 @@
                 },              
             }).done(function(received_data) {           // 戻ってきたのはJSON（文字列）
                 var dict = JSON.parse(received_data);   // JSONを連想配列にする
-                var image = dict["image"];
+                var image = dict["image"];              // base64エンコードされた画像を取得
                 if (image == null) {
                     $("#error").text("画像が取得できませんでした");
                 }
-                $('#result').attr("src", image);              // html要素を書き換える
+                $('#result').attr("src", image);         // html要素を書き換える
                 restore()
             }).fail(function() {
                 $("#error").text("予期せぬエラーが発生しました");
                 restore()
             });
         };
+        // ボタン状態を元に戻す
         function restore(){
             $("#generate").prop("disabled", false);
             $("#generate").LoadingOverlay("hide", true);
         }
+        // デバッグ用（
         function reset(){
-            $("#generate").prop("disabled", false);
+            restore()
             $("#prompt").text("");
             $("#seed").val("-1");
         };
